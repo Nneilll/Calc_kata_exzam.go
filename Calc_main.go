@@ -1,70 +1,55 @@
 package main
 
 import (
-	"bufio"    // Пакет для чтения данных от пользователя
-	"fmt"      // Пакет для форматированного ввода/вывода
-	"os"       // Пакет для работы с операционной системой (нужен для ввода с клавиатуры)
-	"strconv"  // Пакет для преобразования строк в числа
-	"strings"  // Пакет для работы со строками
+	"fmt"
+	"strconv"
+	"strings"
 )
 
 func main() {
-	// Создаем новый сканер для чтения ввода пользователя
-	scanner := bufio.NewScanner(os.Stdin)
+	var input string
+	fmt.Println("Введите выражение (например, 5 + 2):")
+	fmt.Scanln(&input)
 
-	// Выводим сообщение пользователю
-	fmt.Print("Введите выражение (например, 5 + 2): ")
-
-	// Ожидаем ввода от пользователя
-	scanner.Scan()
-
-	// Читаем строку, введенную пользователем
-	input := scanner.Text()
-
-	// Разбиваем строку на части по пробелам. Например, "5 + 2" -> ["5", "+", "2"]
+	// Разделяем строку по пробелам
 	parts := strings.Split(input, " ")
 
-	// Преобразуем первую часть выражения в число
-	num1, err := strconv.Atoi(parts[0])
-	if err != nil {
-		fmt.Println("Ошибка преобразования первого числа:", err)
+	if len(parts) != 3 {
+		fmt.Println("Некорректное выражение. Попробуйте еще раз.")
 		return
 	}
 
-	// Оператор находится во второй части выражения (например, "+")
+	// Парсим числа
+	num1, err1 := strconv.Atoi(parts[0])
+	num2, err2 := strconv.Atoi(parts[2])
 	operator := parts[1]
 
-	// Преобразуем третью часть выражения в число
-	num2, err := strconv.Atoi(parts[2])
-	if err != nil {
-		fmt.Println("Ошибка преобразования второго числа:", err)
+	if err1 != nil || err2 != nil {
+		fmt.Println("Ошибка ввода чисел. Попробуйте еще раз.")
 		return
 	}
 
-	// Объявляем переменную для результата
-	var result int
+	// Проверка на 0
+	if num1 == 0 || num2 == 0 {
+		fmt.Println("Число 0 не допускается. Попробуйте еще раз.")
+		return
+	}
 
-	// Проверяем оператор и выполняем соответствующую операцию
+	// Выполнение операции
 	switch operator {
 	case "+":
-		result = num1 + num2
+		fmt.Printf("Результат: %d\n", num1+num2)
 	case "-":
-		result = num1 - num2
+		fmt.Printf("Результат: %d\n", num1-num2)
 	case "*":
-		result = num1 * num2
+		fmt.Printf("Результат: %d\n", num1*num2)
 	case "/":
-		// Дополнительная проверка на деление на ноль
 		if num2 == 0 {
-			fmt.Println("Ошибка: деление на ноль")
-			return
+			fmt.Println("Ошибка: деление на 0!")
+		} else {
+			fmt.Printf("Результат: %d\n", num1/num2)
 		}
-		result = num1 / num2
 	default:
-		// Если введен неизвестный оператор
-		fmt.Println("Неизвестный оператор:", operator)
-		return
+		fmt.Println("Некорректный оператор. Попробуйте еще раз.")
 	}
-
-	// Выводим результат
-	fmt.Println("Результат:", result)
 }
